@@ -41,6 +41,45 @@ func (avl *AVLNode) insert(key int) *AVLNode {
 	return avl
 }
 
+func (avl *AVLNode) delete(key int) *AVLNode {
+	if avl == nil {
+		return avl
+	}
+	if key < avl.Val {
+		avl.Left = avl.Left.delete(key)
+	} else if key > avl.Val {
+		avl.Right = avl.Right.delete(key)
+	} else {
+		if avl.Left != nil && avl.Right != nil {
+			// 把删除节点的值改为其后继节点的值
+			avl.Val = avl.Right.getMin()
+			// 删除后继节点
+			avl.Right = avl.Right.delete(avl.Val)
+		} else if avl.Left != nil {
+			avl = avl.Left
+		} else {
+			avl = avl.Right
+		}
+	}
+	if avl != nil {
+		avl.Height = max(avl.Left.getHeight(), avl.Right.getHeight()) + 1
+		avl = avl.handleNode()
+	}
+	return avl
+}
+
+// 获取删除节点的后继节点，即删除节点的右子树的最小值
+func (avl *AVLNode) getMin() int {
+	if avl == nil {
+		return -1
+	}
+	if avl.Left == nil {
+		return avl.Val
+	} else {
+		return avl.Left.getMin()
+	}
+}
+
 func (avl *AVLNode) handleNode() *AVLNode {
 	if avl.Left.getHeight() - avl.Right.getHeight() == 2 {
 		// 当节点平衡因子大于0时，只需右转
@@ -169,6 +208,10 @@ func main() {
 	for _, i := range a {
 		avl = avl.insert(i)
 	}
+	inOrderRecu(avl)
+	fmt.Println(avl.isBalanced())
+
+	avl = avl.delete(7)
 	inOrderRecu(avl)
 	fmt.Println(avl.isBalanced())
 }
