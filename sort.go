@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func shellSort(s []int) []int {
+func shellSort(s []int) {
 	increment, length := 1, len(s)
 	for increment < length / 3 {
 		increment = 3 * increment + 1
@@ -15,20 +15,18 @@ func shellSort(s []int) []int {
 		}
 		increment /= 3
 	}
-	return s
 }
 
-func quickSort(s []int) []int {
-	return qSort(s, 0, len(s)-1)
+func quickSort(s []int) {
+	qSort(s, 0, len(s)-1)
 }
 
-func qSort(s []int, low, high int) []int {
+func qSort(s []int, low, high int) {
 	if low < high {
 		pivot := partition(s, low, high)
 		qSort(s, pivot+1, high)
 		qSort(s, low, pivot-1)
 	}
-	return s
 }
 
 func partition(s []int, low, high int) int {
@@ -62,6 +60,7 @@ func partition(s []int, low, high int) int {
 
 func main() {
 	s := []int{9, 1, 5, 8, 3, 7, 4, 6, 2}
-	//fmt.Println(shellSort(s))
-	fmt.Println(quickSort(s))
+	shellSort(s)
+	//quickSort(s)
+	fmt.Println(s)
 }
