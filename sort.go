@@ -33,7 +33,7 @@ func heapSort(s []int) {
 }
 
 func heapAdjust(s []int, pos int, length int) {
-	for i := 2*pos+1; i <= length-1; i = 2*pos+1 {
+	for i := 2*pos+1; i < length; i = 2*pos+1 {
 		if i < length-1 && s[i] < s[i+1] {
 			i++
 		}
@@ -52,13 +52,13 @@ func mergeSort(s []int, low, high int) {
 		return
 	}
 
-	mid := (high + low) / 2
+	mid := (low + high) / 2
 	mergeSort(s, low, mid)
 	mergeSort(s, mid+1, high)
 	merge(s, low, mid, high)
 }
 
-func merge(s []int, low int, mid int, high int) {
+func merge(s []int, low, mid, high int) {
 	temp := make([]int, high-low+1)
 	for i := low; i <= high; i++ {
 		temp[i-low] = s[i]
@@ -88,7 +88,7 @@ func quickSort(s []int) {
 	qSort(s, 0, len(s)-1)
 }
 
-func qSort(s []int, low int, high int) {
+func qSort(s []int, low, high int) {
 	if low < high {
 		pivot := partition(s, low, high)
 		qSort(s, pivot+1, high)
@@ -96,25 +96,25 @@ func qSort(s []int, low int, high int) {
 	}
 }
 
-func partition(s []int, low int, high int) int {
-	mid := low + (high-low) / 2
-	if s[mid] > s[high] {
-		s[mid], s[high] = s[high], s[mid]
+func partition(s []int, low, high int) int {
+	mid := (low + high) / 2
+	if s[high] < s[mid] {
+		s[high], s[mid] = s[mid], s[high]
 	}
-	if s[low] > s[high] {
+	if s[high] < s[low] {
 		s[low], s[high] = s[high], s[low]
 	}
-	if s[mid] > s[low] {
-		s[mid], s[low] = s[low], s[mid]
+	if s[low] < s[mid] {
+		s[low], s[mid] = s[mid], s[low]
 	}
 	pivotKey := s[low]
 
 	for low < high {
-		for low < high && s[high] > pivotKey {
+		if low < high && s[high] >= pivotKey {
 			high--
 		}
 		s[low] = s[high]
-		for low < high && s[low] < pivotKey {
+		if low < high && s[low] <= pivotKey {
 			low++
 		}
 		s[high] = s[low]
